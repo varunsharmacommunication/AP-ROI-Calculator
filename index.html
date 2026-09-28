@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AP Automation ROI Calculator | Astute Business Solutions</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧾</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<style>
+:root{
+  --teal:#0B89A1;--sky:#00C6FF;--navy:#003C51;--cream:#F2E8C4;--mint:#E6F4F1;
+  --black:#000;--gray:#6D6E71;--gray-l:#BCBDC0;--off:#F6F6F6;--white:#fff;--orange:#FA9137;
+  --bg:var(--cream);--fg:var(--navy);--card:var(--white);--sub:var(--gray);--border:var(--gray-l);
+  --font:'Inter',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);box-sizing:border-box;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#04222d;--fg:#eef6f8;--card:#0a3040;--sub:#9fb9c2;--border:#134a5e;--off:#0a3040;}}
+:root[data-theme="dark"]{--bg:#04222d;--fg:#eef6f8;--card:#0a3040;--sub:#9fb9c2;--border:#134a5e;--off:#0a3040;}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--font);line-height:1.5;-webkit-font-smoothing:antialiased}
+img{max-width:100%}
+.wrap{max-width:760px;margin:0 auto;padding:0 20px 80px}
+header.bar{display:flex;align-items:center;gap:16px;padding:18px 20px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--bg);z-index:5;padding-top:calc(18px + env(safe-area-inset-top,0px))}
+header.bar img{height:42px;width:auto}
+header.bar span{font-size:13px;color:var(--sub);border-left:1px solid var(--border);padding-left:12px}
+.eyebrow{color:var(--teal);font-weight:600;font-size:13px;margin:36px 0 8px}
+.hmark{position:absolute;top:50%;right:20px;transform:translateY(-50%);width:34px;height:auto;opacity:.35;pointer-events:none}
+@media(max-width:420px){.hmark{display:none}}
+h1{font-size:clamp(28px,4vw,38px);margin:0 0 14px;font-weight:800;letter-spacing:-.01em}
+.lead{color:var(--sub);font-size:16px;max-width:62ch;margin:0 0 8px}
+.lead b{color:var(--fg)}
+.proof{font-size:13.5px;color:var(--teal);background:var(--mint);display:inline-block;padding:8px 14px;border-radius:8px;margin-top:6px}
+form{margin-top:32px;display:flex;flex-direction:column;gap:22px}
+fieldset{border:0;margin:0;padding:0}
+label{display:block;font-weight:600;font-size:14.5px;margin-bottom:8px}
+label small{display:block;font-weight:400;color:var(--sub);font-size:13px;margin-top:2px}
+select,input[type=number]{width:100%;font-family:var(--font);font-size:15px;padding:12px 14px;border-radius:9px;border:1.5px solid var(--border);background:var(--card);color:var(--fg)}
+select:focus-visible,input:focus-visible{outline:2px solid var(--teal);outline-offset:1px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px 24px}
+.assume{border:1px dashed var(--border);border-radius:12px;padding:20px 22px}
+.assume>p{margin:0 0 16px;font-size:13.5px;color:var(--sub)}
+.submit{margin-top:8px;background:var(--teal);color:#fff;border:0;border-radius:10px;padding:15px 22px;font-size:16px;font-weight:700;font-family:var(--font);cursor:pointer}
+.submit:hover{background:var(--navy)}
+#results{margin-top:48px;display:none}
+#results.show{display:block}
+.scorecard{background:var(--navy);color:#fff;border-radius:16px;padding:32px}
+.scorecard .label{font-size:14px;color:#bcdfe6;margin-bottom:6px}
+.scorecard .taxnum{font-size:42px;font-weight:800;color:var(--orange)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-top:22px}
+.stats .c{background:rgba(255,255,255,.06);border-radius:10px;padding:16px}
+.stats .c b{display:block;font-size:22px;color:#fff;margin-bottom:2px}
+.stats .c span{font-size:12.5px;color:#9fc9d2}
+.block{margin-top:28px;border:1px solid var(--border);border-radius:12px;padding:22px 24px;background:var(--card)}
+.block h3{margin:0 0 12px;font-size:16px}
+.cat-row{display:flex;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px solid var(--border);font-size:14.5px}
+.cat-row:last-child{border-bottom:0}
+.cat-row .r{text-align:right;white-space:nowrap;color:var(--fg);font-weight:600}
+.cat-row .l small{display:block;color:var(--sub);font-weight:400;font-size:12.5px;margin-top:2px}
+.next a{display:block;padding:14px 16px;border:1px solid var(--border);border-radius:10px;margin-bottom:10px;color:var(--fg);text-decoration:none;font-size:14.5px;font-weight:600}
+.next a:hover{border-color:var(--teal);background:var(--mint)}
+.next a small{display:block;font-weight:400;color:var(--sub);margin-top:3px}
+details{margin-top:28px;border-top:1px solid var(--border);padding-top:18px}
+summary{cursor:pointer;font-weight:600;font-size:14.5px;color:var(--teal)}
+details p{color:var(--sub);font-size:13.5px;margin:12px 0 8px}
+footer{text-align:center;color:var(--sub);font-size:12.5px;padding:30px 20px}
+/* alignment + select fixes */
+fieldset{display:flex;flex-direction:column;justify-content:flex-end;min-width:0}
+select{padding-right:42px;text-overflow:ellipsis;white-space:nowrap;overflow:hidden}
+</style>
+</head>
+<body>
+<header class="bar"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAANwAAACcCAMAAAAj3DXfAAAAIGNIUk0AAHomAACAhAAA+gAAAIDoAAB1MAAA6mAAADqYAAAXcJy6UTwAAAASUExURf///zOIo1F1gmRiY7u6u728vOPeofoAAAABdFJOUwBA5thmAAAAAWJLR0QAiAUdSAAAAAd0SU1FB+oJGAImC7Q+AYcAAAJ2SURBVHja7ZqJVsQgDAAh1f//ZS+uhEDXp6Xizrynbim0maYcaxsCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPAdRvFI5Psn7xJIKTaO6w61tSlbIRafwKJjNtriRr61mtU3JCjcndfPAtpLrUtfFsanch1uXutLbRMdxaJ2R3LD2onxpOZO6RklU+Ca+B+TGjZe5xT5GdzjbU06nbhjGXnIylPsHmctuLy9KeRTHVnLiy4XRYL2VXHXTdqOpaCc5Gcklu67f/Vhu4STeujm9rtfbSE7GcjWUXeW0m7UTJ4p95MTKeSvM6ZjwhweUMn+Ln7rQj5rbyDWLk1Hqkp2ozS3kmoXXOHVmOt9FLjZyk9SFE7nZaHq/3OfG6zx1u8mpxJ31ukfDNdP+bXJ60jlM6kY+TrjzL+q3yBm3Q1TqmphlJuf8h+U7s+JFiJXTqasZccLvrpF4G77cksx1bjp1uUxOJvG6vpbHFmsrll994pzUeWG4w+Mw5HvkHLe+13lR9FHNIr5FzkucHTD9IMSJqrk+znmWy9VoFK+JEtvDj2IWPrUBAAB4ZvI31Jh+SkHh64lxeiQZJabN5hBfZe+FoppG01hKdakHTkXXTPsxO4XmgxNfa2oqtfui11j9Lieqr7xctqCJ6dhVrj2V5N2irVSlqP6cyFXDUPPsvfvyK3LpJqkX1N5b+vWgfEupFJUjqCycyoWr7brbMpjbJEZd5FWqcjajrbH0H0vXvcaukxPbBzw5ceRcmU7O1MpHu0aujHt5lBT37S9Ju9OgqUdLe4hQKsdWXkyt5oJd1ekAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFvAGVZcSphC0P6EAAAAASUVORK5CYII=" alt="Astute"><span>AP Automation ROI Calculator</span><svg class="hmark" viewBox="0 0 842 595" aria-hidden="true" focusable="false"><path fill="var(--gray-l)" d="m537.68 559.2l-186.88-384.85 72.05-140.35 266.87 525.2h-0.02z"/><path fill="var(--teal)" d="m153 559.2l269.84-525.2 70.56 138.74-188.37 386.46z"/><path fill="var(--gray)" d="m153.01 559.2l67.45-131.3h253.41l64.87 131.28-0.02 0.02z"/></svg></header>
+<div class="wrap">
+  <p class="eyebrow">Interactive Calculator</p>
+  <h1>What would AP automation be worth to your team?</h1>
+  <p class="lead">Enter your own invoice volume, staffing, and cost assumptions &mdash; every number below is yours to change. This models savings, capacity, and payback the same way AstuteAP customers evaluate the business case.</p>
+  <span class="proof">Grounded in real deployments: AstuteAP customers have seen 76&ndash;82% lower AP processing cost, with go-lives in as little as 37 days.</span>
+
+  <form id="form">
+    <div class="grid">
+      <fieldset>
+        <label>Invoices processed per month</label>
+        <input type="number" id="volume" min="1" placeholder="e.g. 4,000" required>
+      </fieldset>
+      <fieldset>
+        <label>AP staff (FTEs) processing invoices today</label>
+        <input type="number" id="fte" min="0" step="0.1" placeholder="e.g. 3.5" required>
+      </fieldset>
+      <fieldset>
+        <label>Average fully-loaded cost per AP FTE / year <small>Salary plus benefits and overhead</small></label>
+        <input type="number" id="loaded" min="0" step="1000" value="68000">
+      </fieldset>
+      <fieldset>
+        <label>Known cost per invoice today, if you have it <small>Optional &mdash; overrides the FTE-based estimate</small></label>
+        <input type="number" id="cpiOverride" min="0" step="0.5" placeholder="e.g. 18.50">
+      </fieldset>
+    </div>
+
+    <div class="assume">
+      <p><b>Editable assumptions</b> &mdash; adjust these to match your own environment or a more/less conservative case.</p>
+      <div class="grid">
+        <fieldset>
+          <label>Average manual processing time per invoice (minutes)</label>
+          <input type="number" id="manualMin" min="1" value="14">
+        </fieldset>
+        <fieldset>
+          <label>Expected automated handling time incl. exceptions (minutes)</label>
+          <input type="number" id="autoMin" min="0" step="0.5" value="3">
+        </fieldset>
+        <fieldset>
+          <label>Expected reduction in AP processing cost (%) <small>Default reflects the 76&ndash;82% range seen in Astute deployments</small></label>
+          <input type="number" id="reduction" min="30" max="90" value="78">
+        </fieldset>
+        <fieldset>
+          <label>Estimated implementation investment <small>Optional &mdash; leave blank for a volume-based estimate</small></label>
+          <input type="number" id="implCost" min="0" step="5000" placeholder="e.g. 150,000">
+        </fieldset>
+      </div>
+    </div>
+    <button class="submit" type="submit">Calculate my ROI</button>
+  </form>
+
+  <section id="results">
+    <div class="scorecard">
+      <div class="label">Potential annual cost savings</div>
+      <div class="taxnum" id="savings">$0</div>
+      <div class="stats">
+        <div class="c"><b id="effPct">0%</b><span>Processing-time improvement</span></div>
+        <div class="c"><b id="capacity">0 FTE</b><span>Capacity released for higher-value work</span></div>
+        <div class="c"><b id="payback">0 mo</b><span>Implementation payback</span></div>
+        <div class="c"><b id="roi">0%</b><span>Year-1 indicative ROI</span></div>
+      </div>
+    </div>
+
+    <div class="block">
+      <h3>How the numbers break down</h3>
+      <div id="breakdown"></div>
+    </div>
+
+    <div class="block">
+      <h3>3-year outlook</h3>
+      <div id="threeYear"></div>
+    </div>
+
+    <div class="block next">
+      <h3>Suggested next steps</h3>
+      <div id="nextSteps"></div>
+    </div>
+  </section>
+
+  <details>
+    <summary>Methodology &amp; assumptions</summary>
+    <p>Current cost per invoice is calculated from your AP staffing cost divided by annual invoice volume, unless you supply your own known figure. Savings apply your chosen reduction percentage to that cost per invoice across your full volume. Capacity released converts the dollar savings into FTE-equivalent time, based on your loaded cost per FTE &mdash; it represents time freed for higher-value work, not a staffing recommendation. AstuteAP's GenAI Capture Engine delivers 95% extraction accuracy with average per-invoice data capture and coding in under 60 seconds; your own cycle time also depends on approval routing and exception volume, which is why manual and automated handling time above are editable. If no implementation investment is entered, a volume-based planning estimate is used and should be replaced with an actual quote.</p>
+  </details>
+</div>
+<footer>Astute Business Solutions &middot; Figures are indicative planning estimates based on your inputs, not a guarantee of results.</footer>
+
+<script>
+function fmt(n){
+  n = Math.round(n);
+  const sign = n<0?'-':'';
+  n = Math.abs(n);
+  if(n>=1000000) return sign+'$'+(n/1000000).toFixed(n>=10000000?0:1)+'M';
+  if(n>=1000) return sign+'$'+Math.round(n/1000)+'K';
+  return sign+'$'+n;
+}
+document.getElementById('form').addEventListener('submit', e=>{
+  e.preventDefault();
+  const v = id => parseFloat(document.getElementById(id).value);
+  const volume = v('volume'), fte = v('fte'), loaded = v('loaded') || 68000;
+  const annualVolume = volume*12;
+  const annualLabor = fte*loaded;
+  let currentCPI = v('cpiOverride');
+  let cpiIsEstimate = true;
+  if(!currentCPI || currentCPI<=0){ currentCPI = annualVolume>0 ? annualLabor/annualVolume : 0; }
+  else { cpiIsEstimate = false; }
+
+  const reduction = Math.min(90, Math.max(30, v('reduction') || 78))/100;
+  const newCPI = currentCPI*(1-reduction);
+  const annualSavings = (currentCPI-newCPI)*annualVolume;
+  const capacity = loaded>0 ? annualSavings/loaded : 0;
+
+  const manualMin = v('manualMin') || 14, autoMin = v('autoMin') >= 0 ? v('autoMin') : 3;
+  const effPct = manualMin>0 ? ((manualMin-autoMin)/manualMin*100) : 0;
+
+  let implCost = v('implCost');
+  let implIsEstimate = true;
+  if(!implCost || implCost<=0){
+    implCost = volume<3000?90000: volume<10000?150000: volume<30000?220000:320000;
+  } else { implIsEstimate = false; }
+
+  const monthlySavings = annualSavings/12;
+  const paybackMonths = monthlySavings>0 ? implCost/monthlySavings : 0;
+  const roiYear1 = implCost>0 ? ((annualSavings-implCost)/implCost*100) : 0;
+  const roi3yr = implCost>0 ? ((annualSavings*3-implCost)/implCost*100) : 0;
+
+  document.getElementById('savings').textContent = fmt(annualSavings);
+  document.getElementById('effPct').textContent = Math.round(effPct)+'%';
+  document.getElementById('capacity').textContent = capacity.toFixed(1)+' FTE';
+  document.getElementById('payback').textContent = (paybackMonths>0?Math.round(paybackMonths):0)+' mo';
+  document.getElementById('roi').textContent = Math.round(roiYear1)+'%';
+
+  document.getElementById('breakdown').innerHTML = `
+    <div class="cat-row"><span class="l">Current cost per invoice${cpiIsEstimate?' <small>(estimated from your staffing inputs)</small>':' <small>(as you entered)</small>'}</span><span class="r">$${currentCPI.toFixed(2)}</span></div>
+    <div class="cat-row"><span class="l">Projected cost per invoice after automation</span><span class="r">$${newCPI.toFixed(2)}</span></div>
+    <div class="cat-row"><span class="l">Annual invoice volume</span><span class="r">${annualVolume.toLocaleString()}</span></div>
+    <div class="cat-row"><span class="l">Implementation investment${implIsEstimate?' <small>(volume-based planning estimate &mdash; replace with your quote)</small>':' <small>(as you entered)</small>'}</span><span class="r">${fmt(implCost)}</span></div>`;
+
+  document.getElementById('threeYear').innerHTML = `
+    <div class="cat-row"><span class="l">Cumulative savings, 3 years</span><span class="r">${fmt(annualSavings*3)}</span></div>
+    <div class="cat-row"><span class="l">Net of implementation investment</span><span class="r">${fmt(annualSavings*3-implCost)}</span></div>
+    <div class="cat-row"><span class="l">3-year indicative ROI</span><span class="r">${Math.round(roi3yr)}%</span></div>`;
+
+  document.getElementById('nextSteps').innerHTML = `
+    <a href="https://www.beastute.com/en-us/ap-automation" target="_blank" rel="noopener">See AstuteAP in Action<small>Explore the 4-pillar platform behind these numbers.</small></a>
+    <a href="https://www.beastute.com/resources/case-studies/peoplesoft-ap-automation-genai-healthcare-case-study" target="_blank" rel="noopener">Read the Children's Minnesota case study<small>76&ndash;82% lower AP processing cost, in a regulated healthcare environment.</small></a>
+    <a href="https://meetings.hubspot.com/arvind7" target="_blank" rel="noopener">Request a live demo<small>See your own invoices processed in real time.</small></a>`;
+
+  const res = document.getElementById('results');
+  res.classList.add('show');
+  res.scrollIntoView({behavior:'smooth', block:'start'});
+});
+</script>
+</body>
+</html>
